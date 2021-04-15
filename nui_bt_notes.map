@@ -64,6 +64,8 @@ Discarded input sections
  .text.log_printf
                 0x00000000        0xc ..\libbip\libbip.a(proxy_import.o)
  .text.vibrate  0x00000000        0xc ..\libbip\libbip.a(proxy_import.o)
+ .text.vPortFree
+                0x00000000        0xc ..\libbip\libbip.a(proxy_import.o)
  .text.show_menu_touch_test
                 0x00000000        0xc ..\libbip\libbip.a(proxy_import.o)
  .text.show_main_menu_item
@@ -348,34 +350,34 @@ LOAD ..\libbip\libbip.a
 .rela.dtors
  *(.rela.dtors)
 
-.rel.got        0x00008088       0x18
+.rel.got        0x00008088       0x30
  *(.rel.got)
- .rel.got       0x00008088       0x18 bt_notes.o
+ .rel.got       0x00008088       0x30 bt_notes.o
 
 .rela.got
  *(.rela.got)
 
-.rel.bss        0x000080a0        0x0
+.rel.bss        0x000080b8        0x0
  *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*)
- .rel.bss       0x000080a0        0x0 bt_notes.o
+ .rel.bss       0x000080b8        0x0 bt_notes.o
 
 .rela.bss
  *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
 
-.rel.iplt       0x000080a0        0x0
+.rel.iplt       0x000080b8        0x0
                 [!provide]                PROVIDE (__rel_iplt_start = .)
  *(.rel.iplt)
- .rel.iplt      0x000080a0        0x0 bt_notes.o
+ .rel.iplt      0x000080b8        0x0 bt_notes.o
                 [!provide]                PROVIDE (__rel_iplt_end = .)
 
-.rela.iplt      0x000080a0        0x0
+.rela.iplt      0x000080b8        0x0
                 [!provide]                PROVIDE (__rela_iplt_start = .)
  *(.rela.iplt)
                 [!provide]                PROVIDE (__rela_iplt_end = .)
 
-.rel.plt        0x000080a0        0x0
+.rel.plt        0x000080b8        0x0
  *(.rel.plt)
- .rel.plt       0x000080a0        0x0 bt_notes.o
+ .rel.plt       0x000080b8        0x0 bt_notes.o
 
 .rela.plt
  *(.rela.plt)
@@ -383,176 +385,175 @@ LOAD ..\libbip\libbip.a
 .init
  *(SORT_NONE(.init))
 
-.plt            0x000080a0        0x0
+.plt            0x000080b8        0x0
  *(.plt)
- .plt           0x000080a0        0x0 bt_notes.o
+ .plt           0x000080b8        0x0 bt_notes.o
 
-.iplt           0x000080a0        0x0
+.iplt           0x000080b8        0x0
  *(.iplt)
- .iplt          0x000080a0        0x0 bt_notes.o
+ .iplt          0x000080b8        0x0 bt_notes.o
 
-.text           0x000080a0      0x74c
+.text           0x000080b8      0x758
  *(.text.unlikely .text.*_unlikely .text.unlikely.*)
  *(.text.exit .text.exit.*)
  *(.text.startup .text.startup.*)
  .text.startup.main
-                0x000080a0        0xa bt_notes.o
-                0x000080a0                main
+                0x000080b8        0xa bt_notes.o
+                0x000080b8                main
  *(.text.hot .text.hot.*)
  *(.text .stub .text.* .gnu.linkonce.t.*)
- *fill*         0x000080aa        0x2 
+ *fill*         0x000080c2        0x2 
  .text.key_press_screen
-                0x000080ac       0x2c bt_notes.o
-                0x000080ac                key_press_screen
+                0x000080c4       0x2c bt_notes.o
+                0x000080c4                key_press_screen
  .text._text_out_ln
-                0x000080d8       0x28 bt_notes.o
-                0x000080d8                _text_out_ln
+                0x000080f0       0x28 bt_notes.o
+                0x000080f0                _text_out_ln
  .text.text_out_with_word_wraps
-                0x00008100       0x86 bt_notes.o
-                0x00008100                text_out_with_word_wraps
- *fill*         0x00008186        0x2 
+                0x00008118       0x86 bt_notes.o
+                0x00008118                text_out_with_word_wraps
+ *fill*         0x0000819e        0x2 
  .text.render_home_view
-                0x00008188       0x74 bt_notes.o
-                0x00008188                render_home_view
+                0x000081a0       0x68 bt_notes.o
+                0x000081a0                render_home_view
  .text.render_help
-                0x000081fc       0x28 bt_notes.o
-                0x000081fc                render_help
+                0x00008208       0x44 bt_notes.o
+                0x00008208                render_help
  .text.render_scroll_bar
-                0x00008224       0x12 bt_notes.o
-                0x00008224                render_scroll_bar
- *fill*         0x00008236        0x2 
+                0x0000824c       0x12 bt_notes.o
+                0x0000824c                render_scroll_bar
+ *fill*         0x0000825e        0x2 
  .text.render_note
-                0x00008238       0x64 bt_notes.o
-                0x00008238                render_note
+                0x00008260       0x70 bt_notes.o
+                0x00008260                render_note
  .text.render_clock
-                0x0000829c       0x38 bt_notes.o
-                0x0000829c                render_clock
- .text.render   0x000082d4       0x42 bt_notes.o
-                0x000082d4                render
- *fill*         0x00008316        0x2 
- .text.print_debug
-                0x00008318       0x64 bt_notes.o
-                0x00008318                print_debug
+                0x000082d0       0x38 bt_notes.o
+                0x000082d0                render_clock
+ .text.render   0x00008308       0x42 bt_notes.o
+                0x00008308                render
  .text.draw_screen
-                0x0000837c       0x48 bt_notes.o
-                0x0000837c                draw_screen
+                0x0000834a       0x48 bt_notes.o
+                0x0000834a                draw_screen
+ *fill*         0x00008392        0x2 
  .text.show_screen
-                0x000083c4       0xbc bt_notes.o
-                0x000083c4                show_screen
+                0x00008394       0xbc bt_notes.o
+                0x00008394                show_screen
  .text.screen_job
-                0x00008480       0x12 bt_notes.o
-                0x00008480                screen_job
- *fill*         0x00008492        0x2 
+                0x00008450       0x12 bt_notes.o
+                0x00008450                screen_job
+ *fill*         0x00008462        0x2 
  .text.dispatch_screen
-                0x00008494      0x100 bt_notes.o
-                0x00008494                dispatch_screen
+                0x00008464       0xe0 bt_notes.o
+                0x00008464                dispatch_screen
  .text.get_notifications
-                0x00008594       0x1c notification.o
-                0x00008594                get_notifications
+                0x00008544       0x1c notification.o
+                0x00008544                get_notifications
  .text.is_supported_fw
-                0x000085b0        0xe notification.o
-                0x000085b0                is_supported_fw
+                0x00008560        0xe notification.o
+                0x00008560                is_supported_fw
  .text.get_note_id_from_noti
-                0x000085be       0x30 notification.o
-                0x000085be                get_note_id_from_noti
+                0x0000856e       0x30 notification.o
+                0x0000856e                get_note_id_from_noti
  .text.scan_notifications
-                0x000085ee       0x8c notification.o
-                0x000085ee                scan_notifications
+                0x0000859e       0x66 notification.o
+                0x0000859e                scan_notifications
  .text.m_strcpy
-                0x0000867a       0x20 utils.o
-                0x0000867a                m_strcpy
- *fill*         0x0000869a        0x2 
- .text          0x0000869c        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x0000869c                _start
+                0x00008604       0x20 utils.o
+                0x00008604                m_strcpy
+ .text.m_strcmp
+                0x00008624       0x18 utils.o
+                0x00008624                m_strcmp
+ .text.get_saved_data_ptr
+                0x0000863c       0x90 utils.o
+                0x0000863c                get_saved_data_ptr
+ .text          0x000086cc        0xc ..\libbip\libbip.a(proxy_import.o)
+                0x000086cc                _start
  .text.text_out
-                0x000086a8        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086a8                text_out
- .text.text_out_center
-                0x000086b4        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086b4                text_out_center
- .text.set_bg_color
-                0x000086c0        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086c0                set_bg_color
- .text.set_fg_color
-                0x000086cc        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086cc                set_fg_color
- .text.draw_horizontal_line
                 0x000086d8        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086d8                draw_horizontal_line
- .text.draw_filled_rect
+                0x000086d8                text_out
+ .text.text_out_center
                 0x000086e4        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086e4                draw_filled_rect
- .text.fill_screen_bg
+                0x000086e4                text_out_center
+ .text.set_bg_color
                 0x000086f0        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086f0                fill_screen_bg
- .text.set_graph_callback_to_ram_1
+                0x000086f0                set_bg_color
+ .text.set_fg_color
                 0x000086fc        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000086fc                set_graph_callback_to_ram_1
- .text.repaint_screen_lines
+                0x000086fc                set_fg_color
+ .text.draw_horizontal_line
                 0x00008708        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008708                repaint_screen_lines
- .text.reg_menu
+                0x00008708                draw_horizontal_line
+ .text.draw_filled_rect
                 0x00008714        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008714                reg_menu
- .text.show_menu_animate
+                0x00008714                draw_filled_rect
+ .text.fill_screen_bg
                 0x00008720        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008720                show_menu_animate
- .text.load_font
+                0x00008720                fill_screen_bg
+ .text.set_graph_callback_to_ram_1
                 0x0000872c        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x0000872c                load_font
- .text._sprintf
+                0x0000872c                set_graph_callback_to_ram_1
+ .text.repaint_screen_lines
                 0x00008738        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008738                _sprintf
- .text._memclr  0x00008744        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008744                _memclr
- .text.set_update_period
+                0x00008738                repaint_screen_lines
+ .text.reg_menu
+                0x00008744        0xc ..\libbip\libbip.a(proxy_import.o)
+                0x00008744                reg_menu
+ .text.show_menu_animate
                 0x00008750        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008750                set_update_period
- .text.set_display_state_value
+                0x00008750                show_menu_animate
+ .text.load_font
                 0x0000875c        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x0000875c                set_display_state_value
- .text._pvPortMalloc
+                0x0000875c                load_font
+ .text._sprintf
                 0x00008768        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008768                _pvPortMalloc
- .text.vPortFree
-                0x00008774        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008774                vPortFree
- .text.get_current_date_time
+                0x00008768                _sprintf
+ .text._memclr  0x00008774        0xc ..\libbip\libbip.a(proxy_import.o)
+                0x00008774                _memclr
+ .text.set_update_period
                 0x00008780        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008780                get_current_date_time
- .text.show_watchface
+                0x00008780                set_update_period
+ .text.set_display_state_value
                 0x0000878c        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x0000878c                show_watchface
- .text.text_out_font
+                0x0000878c                set_display_state_value
+ .text._pvPortMalloc
                 0x00008798        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x00008798                text_out_font
- .text.pvPortMalloc
+                0x00008798                _pvPortMalloc
+ .text.get_current_date_time
                 0x000087a4        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000087a4                pvPortMalloc
- .text.get_fw_version
+                0x000087a4                get_current_date_time
+ .text.show_watchface
                 0x000087b0        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000087b0                get_fw_version
- .text.ElfReadSettings
+                0x000087b0                show_watchface
+ .text.text_out_font
                 0x000087bc        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000087bc                ElfReadSettings
- .text.ElfWriteSettings
+                0x000087bc                text_out_font
+ .text.pvPortMalloc
                 0x000087c8        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000087c8                ElfWriteSettings
- .text.get_proc_by_addr
+                0x000087c8                pvPortMalloc
+ .text.get_fw_version
                 0x000087d4        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000087d4                get_proc_by_addr
- .text.get_ptr_temp_buf_2
+                0x000087d4                get_fw_version
+ .text.ElfReadSettings
                 0x000087e0        0xc ..\libbip\libbip.a(proxy_import.o)
-                0x000087e0                get_ptr_temp_buf_2
+                0x000087e0                ElfReadSettings
+ .text.ElfWriteSettings
+                0x000087ec        0xc ..\libbip\libbip.a(proxy_import.o)
+                0x000087ec                ElfWriteSettings
+ .text.get_proc_by_addr
+                0x000087f8        0xc ..\libbip\libbip.a(proxy_import.o)
+                0x000087f8                get_proc_by_addr
+ .text.get_ptr_temp_buf_2
+                0x00008804        0xc ..\libbip\libbip.a(proxy_import.o)
+                0x00008804                get_ptr_temp_buf_2
  *(.gnu.warning)
  *(.glue_7t)
- .glue_7t       0x000087ec        0x0 linker stubs
+ .glue_7t       0x00008810        0x0 linker stubs
  *(.glue_7)
- .glue_7        0x000087ec        0x0 linker stubs
+ .glue_7        0x00008810        0x0 linker stubs
  *(.vfp11_veneer)
- .vfp11_veneer  0x000087ec        0x0 linker stubs
+ .vfp11_veneer  0x00008810        0x0 linker stubs
  *(.v4_bx)
- .v4_bx         0x000087ec        0x0 linker stubs
+ .v4_bx         0x00008810        0x0 linker stubs
 
 .fini
  *(SORT_NONE(.fini))
@@ -560,20 +561,18 @@ LOAD ..\libbip\libbip.a
                 [!provide]                PROVIDE (_etext = .)
                 [!provide]                PROVIDE (etext = .)
 
-.rodata         0x000087ec       0xda
+.rodata         0x00008810       0xd8
  *(.rodata .rodata.* .gnu.linkonce.r.*)
  .rodata.render_home_view.str1.1
-                0x000087ec        0xf bt_notes.o
+                0x00008810        0xf bt_notes.o
  .rodata.render_help.str1.1
-                0x000087fb       0x79 bt_notes.o
+                0x0000881f       0x80 bt_notes.o
  .rodata.render_note.str1.1
-                0x00008874        0xb bt_notes.o
+                0x0000889f        0xb bt_notes.o
  .rodata.render_clock.str1.1
-                0x0000887f        0xa bt_notes.o
- .rodata.print_debug.str1.1
-                0x00008889        0x9 bt_notes.o
+                0x000088aa        0xa bt_notes.o
  .rodata.show_screen.str1.1
-                0x00008892       0x34 bt_notes.o
+                0x000088b4       0x34 bt_notes.o
 
 .rodata1
  *(.rodata1)
@@ -602,7 +601,7 @@ LOAD ..\libbip\libbip.a
 
 .exception_ranges
  *(.exception_ranges*)
-                0x000088c6                . = .
+                0x000088e8                . = .
 
 .eh_frame
  *(.eh_frame)
@@ -617,7 +616,7 @@ LOAD ..\libbip\libbip.a
 .exception_ranges
  *(.exception_ranges*)
 
-.tdata          0x000088c6        0x0
+.tdata          0x000088e8        0x0
                 [!provide]                PROVIDE (__tdata_start = .)
  *(.tdata .tdata.* .gnu.linkonce.td.*)
 
@@ -625,18 +624,18 @@ LOAD ..\libbip\libbip.a
  *(.tbss .tbss.* .gnu.linkonce.tb.*)
  *(.tcommon)
 
-.preinit_array  0x000088c6        0x0
+.preinit_array  0x000088e8        0x0
                 [!provide]                PROVIDE (__preinit_array_start = .)
  *(.preinit_array)
                 [!provide]                PROVIDE (__preinit_array_end = .)
 
-.init_array     0x000088c6        0x0
+.init_array     0x000088e8        0x0
                 [!provide]                PROVIDE (__init_array_start = .)
  *(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*))
  *(.init_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .ctors)
                 [!provide]                PROVIDE (__init_array_end = .)
 
-.fini_array     0x000088c6        0x0
+.fini_array     0x000088e8        0x0
                 [!provide]                PROVIDE (__fini_array_start = .)
  *(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*))
  *(.fini_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .dtors)
@@ -659,54 +658,63 @@ LOAD ..\libbip\libbip.a
 .jcr
  *(.jcr)
 
-.data.rel.ro    0x000088c6        0x0
+.data.rel.ro    0x000088e8        0x0
  *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*)
  *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*)
- .data.rel.ro   0x000088c6        0x0 bt_notes.o
+ .data.rel.ro   0x000088e8        0x0 bt_notes.o
 
-.dynamic        0x000088c8       0x80
+.dynamic        0x000088e8       0x80
  *(.dynamic)
- .dynamic       0x000088c8       0x80 bt_notes.o
-                0x000088c8                _DYNAMIC
+ .dynamic       0x000088e8       0x80 bt_notes.o
+                0x000088e8                _DYNAMIC
 
-.got            0x00008948       0x18
+.got            0x00008968       0x24
  *(.got.plt)
- .got.plt       0x00008948        0xc bt_notes.o
-                0x00008948                _GLOBAL_OFFSET_TABLE_
+ .got.plt       0x00008968        0xc bt_notes.o
+                0x00008968                _GLOBAL_OFFSET_TABLE_
  *(.igot.plt)
- .igot.plt      0x00008954        0x0 bt_notes.o
+ .igot.plt      0x00008974        0x0 bt_notes.o
  *(.got)
- .got           0x00008954        0xc bt_notes.o
+ .got           0x00008974       0x18 bt_notes.o
  *(.igot)
 
-.data           0x00008960       0x20
-                0x00008960                __data_start = .
+.data           0x0000898c       0xd5
+                0x0000898c                __data_start = .
  *(.data .data.* .gnu.linkonce.d.*)
  .data.rel.screen_data
-                0x00008960       0x20 bt_notes.o
-                0x00008960                screen_data
+                0x0000898c       0x20 bt_notes.o
+                0x0000898c                screen_data
+ .data.NOTE_DEMO_CONTENT
+                0x000089ac       0xa5 utils.o
+                0x000089ac                NOTE_DEMO_CONTENT
+ .data.NOTE_DEMO_TITLE
+                0x00008a51        0x9 utils.o
+                0x00008a51                NOTE_DEMO_TITLE
+ .data.SIGNATURE
+                0x00008a5a        0x7 utils.o
+                0x00008a5a                SIGNATURE
 
 .data1
  *(.data1)
-                0x00008980                _edata = .
+                0x00008a61                _edata = .
                 [!provide]                PROVIDE (edata = .)
-                0x00008980                . = .
-                0x00008980                __bss_start = .
-                0x00008980                __bss_start__ = .
+                0x00008a61                . = .
+                0x00008a61                __bss_start = .
+                0x00008a61                __bss_start__ = .
 
-.bss            0x00008980        0x0
+.bss            0x00008a61        0x0
  *(.dynbss)
- .dynbss        0x00008980        0x0 bt_notes.o
+ .dynbss        0x00008a61        0x0 bt_notes.o
  *(.bss .bss.* .gnu.linkonce.b.*)
  *(COMMON)
-                0x00008980                . = ALIGN ((. != 0x0)?0x4:0x1)
-                0x00008980                _bss_end__ = .
-                0x00008980                __bss_end__ = .
-                0x00008980                . = ALIGN (0x4)
-                0x00008980                . = SEGMENT_START ("ldata-segment", .)
-                0x00008980                . = ALIGN (0x4)
-                0x00008980                __end__ = .
-                0x00008980                _end = .
+                0x00008a61                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x00008a61                _bss_end__ = .
+                0x00008a61                __bss_end__ = .
+                0x00008a64                . = ALIGN (0x4)
+                0x00008a64                . = SEGMENT_START ("ldata-segment", .)
+                0x00008a64                . = ALIGN (0x4)
+                0x00008a64                __end__ = .
+                0x00008a64                _end = .
                 [!provide]                PROVIDE (end = .)
 
 .stack          0x00080000        0x0
@@ -820,11 +828,11 @@ LOAD ..\libbip\libbip.a
 .note.gnu.arm.ident
  *(.note.gnu.arm.ident)
 
-.noinit         0x00008980        0x0
-                0x00008980                . = ALIGN (0x2)
+.noinit         0x00008a64        0x0
+                0x00008a64                . = ALIGN (0x2)
                 [!provide]                PROVIDE (__noinit_start = .)
  *(.noinit)
-                0x00008980                . = ALIGN (0x2)
+                0x00008a64                . = ALIGN (0x2)
                 [!provide]                PROVIDE (__noinit_end = .)
 
 /DISCARD/
@@ -838,19 +846,23 @@ Cross Reference Table
 Symbol                                            File
 ElfGetSettingsSize                                ..\libbip\libbip.a(proxy_import.o)
 ElfReadSettings                                   ..\libbip\libbip.a(proxy_import.o)
-                                                  notification.o
-                                                  bt_notes.o
+                                                  utils.o
 ElfWriteSettings                                  ..\libbip\libbip.a(proxy_import.o)
-                                                  notification.o
+                                                  utils.o
+NOTE_DEMO_CONTENT                                 utils.o
+NOTE_DEMO_TITLE                                   utils.o
+SIGNATURE                                         utils.o
 _DYNAMIC                                          bt_notes.o
 _GLOBAL_OFFSET_TABLE_                             bt_notes.o
+                                                  utils.o
 _memclr                                           ..\libbip\libbip.a(proxy_import.o)
+                                                  utils.o
                                                   bt_notes.o
 _memcmp                                           ..\libbip\libbip.a(proxy_import.o)
 _memcpy                                           ..\libbip\libbip.a(proxy_import.o)
 _memset                                           ..\libbip\libbip.a(proxy_import.o)
 _pvPortMalloc                                     ..\libbip\libbip.a(proxy_import.o)
-                                                  notification.o
+                                                  utils.o
 _rand                                             ..\libbip\libbip.a(proxy_import.o)
 _sprintf                                          ..\libbip\libbip.a(proxy_import.o)
                                                   bt_notes.o
@@ -902,7 +914,6 @@ get_left_side_menu_active                         ..\libbip\libbip.a(proxy_impor
 get_navi_data                                     ..\libbip\libbip.a(proxy_import.o)
 get_note_id_from_noti                             notification.o
 get_notifications                                 notification.o
-                                                  bt_notes.o
 get_proc_by_addr                                  ..\libbip\libbip.a(proxy_import.o)
                                                   bt_notes.o
 get_ptr_free_list                                 ..\libbip\libbip.a(proxy_import.o)
@@ -919,6 +930,9 @@ get_res_count                                     ..\libbip\libbip.a(proxy_impor
 get_res_params                                    ..\libbip\libbip.a(proxy_import.o)
 get_res_ret_language                              ..\libbip\libbip.a(proxy_import.o)
 get_res_string_by_id                              ..\libbip\libbip.a(proxy_import.o)
+get_saved_data_ptr                                utils.o
+                                                  notification.o
+                                                  bt_notes.o
 get_selected_locale                               ..\libbip\libbip.a(proxy_import.o)
 get_stored_lang                                   ..\libbip\libbip.a(proxy_import.o)
 get_system_locale                                 ..\libbip\libbip.a(proxy_import.o)
@@ -941,13 +955,13 @@ load_elf_by_name                                  ..\libbip\libbip.a(proxy_impor
 load_font                                         ..\libbip\libbip.a(proxy_import.o)
                                                   bt_notes.o
 log_printf                                        ..\libbip\libbip.a(proxy_import.o)
+m_strcmp                                          utils.o
 m_strcpy                                          utils.o
                                                   notification.o
                                                   bt_notes.o
 main                                              bt_notes.o
                                                   ..\libbip\libbip.a(proxy_import.o)
 pop_ret_f                                         ..\libbip\libbip.a(proxy_import.o)
-print_debug                                       bt_notes.o
 push_ret_f                                        ..\libbip\libbip.a(proxy_import.o)
 pvPortMalloc                                      ..\libbip\libbip.a(proxy_import.o)
                                                   bt_notes.o
@@ -1027,7 +1041,6 @@ text_out_font                                     ..\libbip\libbip.a(proxy_impor
 text_out_with_word_wraps                          bt_notes.o
 text_width                                        ..\libbip\libbip.a(proxy_import.o)
 vPortFree                                         ..\libbip\libbip.a(proxy_import.o)
-                                                  notification.o
 vTaskDelay                                        ..\libbip\libbip.a(proxy_import.o)
 vibrate                                           ..\libbip\libbip.a(proxy_import.o)
 write_flash                                       ..\libbip\libbip.a(proxy_import.o)

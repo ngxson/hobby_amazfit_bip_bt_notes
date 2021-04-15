@@ -61,18 +61,14 @@ void text_out_with_word_wraps(char *txt, int y, int page_num) {
 
 void render_home_view(struct app_data_ *app_data) {
   int i, id;
-  note n;
+  saved_data_t *saved_data = get_saved_data_ptr();
+  note *n;
   char buf[40];
 
   for (i=0; i<3; i++) {
     id = app_data->current_note == SCREEN_HOME_1 ? i : (i+3);
-    ElfReadSettings(
-      ELF_INDEX_SELF,
-      &n,
-      NOTE_OFFSET+sizeof(note)*id,
-      sizeof(note)
-    );
-    _sprintf(buf, "%d. %s", id + 1, n.title[0] ? n.title : "(empty)");
+    n = &saved_data->notes[id];
+    _sprintf(buf, "%d. %s", id + 1, n->title[0] ? n->title : "(empty)");
     text_out(buf, 5, 58 * i + 29 - FONT_HEIGHT_HALF);
   }
 }
@@ -82,6 +78,10 @@ void render_help() {
   char buf[256];
   m_strcpy(buf, "BT Notes V1.0\n(c) ngxson.com\nHOW TO USE: Send a notification from your phone.\nThe title must start with @bip1, @bip2,...", 256);
   text_out_with_word_wraps(buf, 5, 0);
+  // print debug
+  int ptr = (int) get_saved_data_ptr();
+  _sprintf(buf, "0x%08x", ptr);
+  text_out(buf, 5, 176 - 18);
 }
 
 void render_scroll_bar(int page, int total) {
@@ -94,22 +94,19 @@ void render_scroll_bar(int page, int total) {
 
 void render_note(struct app_data_ *app_data) {
   int id = app_data->current_note;
-  note n;
-  ElfReadSettings(
-    ELF_INDEX_SELF,
-    &n,
-    NOTE_OFFSET+sizeof(note)*id,
-    sizeof(note)
-  );
+  saved_data_t *saved_data = get_saved_data_ptr();
+  note *n = &saved_data->notes[id];
+  char msg[NOTE_MSG_LEN];
+  m_strcpy(msg, n->msg, NOTE_MSG_LEN);
 
   text_out_center("Loading...", 88, 88 - FONT_HEIGHT_HALF);
   repaint_screen_lines(0, 176);
   fill_screen_bg();
 
   // render content
-  text_out(n.title, 5, 5);
+  text_out(n->title, 5, 5);
   draw_horizontal_line(5 + 20, 0, 176);
-  text_out_with_word_wraps(n.msg, 5 + 20 + 5, app_data->current_page_num);
+  text_out_with_word_wraps(msg, 5 + 20 + 5, app_data->current_page_num);
   render_scroll_bar(app_data->current_page_num, 3);
 }
 

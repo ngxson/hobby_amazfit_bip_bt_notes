@@ -76,6 +76,7 @@ void screen_job() {
   draw_screen(app_data, NULL);
 }
 
+/*
 void print_debug(struct app_data_ *app_data) {
   set_bg_color(COLOR_BLACK);
   fill_screen_bg();
@@ -86,10 +87,13 @@ void print_debug(struct app_data_ *app_data) {
   char buf[32];
   _sprintf(buf, "count %d", noti_list->count);
   text_out(buf, 5, 5);
-  text_out(noti_list->last_noti->title, 5, 5+20);
-  text_out(noti_list->last_noti->msg, 5, 5+40);
+  text_out(noti_list->notifications[0]->title, 5, 5+20);
+  text_out(noti_list->notifications[0]->msg, 5, 5+40);
   repaint_screen_lines(0, 176);
+  vTaskDelay(3000);
+  stm32_soft_reset();
 }
+*/
 
 int dispatch_screen(void *param) {
   struct app_data_ **app_data_p = get_ptr_temp_buf_2(); //  pointer to a pointer to screen data 
@@ -101,7 +105,7 @@ int dispatch_screen(void *param) {
   if (app_data->current_note == SCREEN_HOME_1) {
     switch (gest->gesture) {
       case GESTURE_SWIPE_DOWN:
-        print_debug(app_data);
+        //print_debug(app_data);
         break;
       case GESTURE_SWIPE_UP:
         app_data->current_note = SCREEN_HOME_2;

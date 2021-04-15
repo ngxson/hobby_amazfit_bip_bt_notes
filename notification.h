@@ -14,7 +14,7 @@ typedef struct {
 
 typedef struct {
   int count;
-  noti_t *last_noti;
+  noti_t *notifications[NOTIFICATIONS_LIST_LEN];
 } noti_list_t;
 
 int is_supported_fw();

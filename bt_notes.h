@@ -33,6 +33,11 @@ typedef struct {
   char msg[NOTE_MSG_LEN];
 } note;
 
+typedef struct {
+  char sigature[NOTE_OFFSET];
+  note notes[6];
+} saved_data_t;
+
 void  show_screen (void *return_screen);
 void  key_press_screen();
 int   dispatch_screen (void *param);
