@@ -39,11 +39,15 @@ void scan_notifications(struct app_data_ *app_data) {
   char *title;
   char *content;
   int i;
+  char checked[] = {0, 0, 0, 0, 0, 0, 0, 0};
   for (i = 0; i < noti_list->count; i++) {
     int index = get_note_id_from_noti(noti_list->notifications[i]);
 
     // if it does not have @bipN on the title, move on
     if (index < 0 || index > 6) continue;
+
+    // if this note has been checked, skip
+    if (checked[index]) continue;
 
     // save data to RAM
     title = noti_list->notifications[i]->title + 5;
@@ -51,5 +55,6 @@ void scan_notifications(struct app_data_ *app_data) {
     content = noti_list->notifications[i]->msg;
     m_strcpy(saved_data->notes[index].title, title,   NOTE_TITLE_LEN);
     m_strcpy(saved_data->notes[index].msg,   content, NOTE_MSG_LEN);
+    checked[index] = 1;
   }
 }
