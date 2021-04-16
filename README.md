@@ -18,8 +18,8 @@ Watch this video:
 
 # How it works
 
-- The program scan for notifications. The memory address for notification array is founded by reversed engineering the firmware [notification.c#L11](https://github.com/ngxson/hobby_amazfit_bip_bt_notes/blob/main/notification.c#L11)
-- It calls `_pvPortMalloc` to create a memory zone for storing texts [utils.c#L29](https://github.com/ngxson/hobby_amazfit_bip_bt_notes/blob/main/utils.c#L29)
+- The program scan for notifications. The memory address for notification array is found by reversed engineering on the firmware [notification.c#L11](https://github.com/ngxson/hobby_amazfit_bip_bt_notes/blob/main/notification.c#L11)
+- It calls `_pvPortMalloc` to create a memory zone for storing notes [utils.c#L29](https://github.com/ngxson/hobby_amazfit_bip_bt_notes/blob/main/utils.c#L29)
 - The address to the allocated memory is saved to flash memory [utils.c#L31](https://github.com/ngxson/hobby_amazfit_bip_bt_notes/blob/main/utils.c#L31)  
 This memory will not be cleared, unless you reboot the watch.
 
