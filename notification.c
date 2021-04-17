@@ -17,16 +17,17 @@ int is_supported_fw() {
   return get_notifications() != NULL;
 }
 
+int check_prefix(char *t) {
+  int part1 = t[0] == '@';
+  int part2a = t[1] == 'b' && t[2] == 'i' && t[3] == 'p';
+  int part2b = t[1] == 'B' && t[2] == 'I' && t[3] == 'P';
+  int part3 = '1' <= t[4] && t[4] <= '6';
+  return part1 && (part2a || part2b) && part3;
+}
+
 int get_note_id_from_noti(noti_t *noti) {
   char *t = noti->title;
-  // "@bipN "
-  if (
-    t[0] == '@'
-    && t[1] == 'b'
-    && t[2] == 'i'
-    && t[3] == 'p'
-    && ('1' <= t[4] && t[4] <= '6')
-  ) {
+  if (check_prefix(t)) {
     return (int) ((t[4] - '0') - 1); // char to index num
   } else {
     return -1;

@@ -76,7 +76,7 @@ void render_home_view(struct app_data_ *app_data) {
 
 void render_help() {
   char buf[256];
-  m_strcpy(buf, "BT Notes V1.0\n(c) ngxson.com\nHOW TO USE: Send a notification from your phone.\nThe title must start with @bip1, @bip2,...", 256);
+  m_strcpy(buf, "BT Notes V1.1\n(c) ngxson.com\nHOW TO USE: Send a notification from your phone.\nThe title must start with @bip1, @bip2,...", 256);
   text_out_with_word_wraps(buf, 5, 0);
   // print debug
   int ptr = (int) get_saved_data_ptr();
