@@ -20,5 +20,7 @@ typedef struct {
 int is_supported_fw();
 void scan_notifications();
 noti_list_t *get_notifications();
+void save_note(struct app_data_ *app_data, int index, char *title, char *content);
+void replace_with_last_noti(struct app_data_ *app_data, int index);
 
 #endif

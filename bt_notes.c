@@ -48,7 +48,7 @@ void show_screen(void *proc) {
       app_data->ret_f = app_data->proc->elf_finish;
     else 
       app_data->ret_f = show_watchface;
-    app_data->current_note = SCREEN_HOME_1;
+    app_data->current_scr = SCREEN_HOME_1;
     app_data->current_page_num = 0;
   }
 
@@ -56,9 +56,14 @@ void show_screen(void *proc) {
   set_display_state_value(2, 1);
 
   if (is_supported_fw()) {
-    draw_screen(NULL, "Scanning\nnotifications...");
-    scan_notifications(app_data);
-    set_update_period(1, 100);
+    get_nand_data(app_data);
+    if (app_data->nand_saved_data.use_bip_prefix) {
+      draw_screen(NULL, "Scanning\nnotifications...");
+      scan_notifications(app_data);
+      set_update_period(1, 100);
+    } else {
+      draw_screen(app_data, NULL);
+    }
   } else {
     draw_screen(NULL, "FW version\nnot supported!");
   }
@@ -76,8 +81,8 @@ void screen_job() {
   draw_screen(app_data, NULL);
 }
 
-/*
-void print_debug(struct app_data_ *app_data) {
+
+/*void print_debug(struct app_data_ *app_data) {
   set_bg_color(COLOR_BLACK);
   fill_screen_bg();
   set_graph_callback_to_ram_1();
@@ -90,114 +95,9 @@ void print_debug(struct app_data_ *app_data) {
   text_out(noti_list->notifications[0]->title, 5, 5+20);
   text_out(noti_list->notifications[0]->msg, 5, 5+40);
   repaint_screen_lines(0, 176);
-  vTaskDelay(3000);
-  stm32_soft_reset();
-}
-*/
-
-int dispatch_screen(void *param) {
-  struct app_data_ **app_data_p = get_ptr_temp_buf_2(); //  pointer to a pointer to screen data 
-  struct app_data_ *app_data = *app_data_p; //  pointer to screen data
-  struct gesture_ *gest = param;
-  int id;
+  //vTaskDelay(3000);
+  //stm32_soft_reset();
+}*/
 
 
-  if (app_data->current_note == SCREEN_HOME_1) {
-    switch (gest->gesture) {
-      case GESTURE_SWIPE_DOWN:
-        //print_debug(app_data);
-        break;
-      case GESTURE_SWIPE_UP:
-        app_data->current_note = SCREEN_HOME_2;
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_CLICK:
-        if (gest->touch_pos_y < 58)       { app_data->current_note = 0; }
-        else if (gest->touch_pos_y < 116) { app_data->current_note = 1; }
-        else                              { app_data->current_note = 2; }
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_SWIPE_RIGHT:
-        show_menu_animate(app_data->ret_f, (unsigned int) show_watchface, ANIMATE_RIGHT);
-        break;
-    }
 
-
-  } else if (app_data->current_note == SCREEN_HOME_2) {
-    switch (gest->gesture) {
-      case GESTURE_SWIPE_DOWN:
-        app_data->current_note = SCREEN_HOME_1;
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_SWIPE_UP:
-        app_data->current_note = SCREEN_HELP;
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_CLICK:
-        if (gest->touch_pos_y < 58)       { app_data->current_note = 3; }
-        else if (gest->touch_pos_y < 116) { app_data->current_note = 4; }
-        else                              { app_data->current_note = 5; }
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_SWIPE_RIGHT:
-        show_menu_animate(app_data->ret_f, (unsigned int) show_watchface, ANIMATE_RIGHT);
-        break;
-    }
-
-  } else if (app_data->current_note == SCREEN_HELP) {
-    switch (gest->gesture) {
-      case GESTURE_SWIPE_DOWN:
-        app_data->current_note = SCREEN_HOME_2;
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_SWIPE_RIGHT:
-        show_menu_animate(app_data->ret_f, (unsigned int) show_watchface, ANIMATE_RIGHT);
-        break;
-    }
-
-
-  } else {
-    switch (gest->gesture) {
-      case GESTURE_SWIPE_RIGHT:
-        id = app_data->current_note;
-        app_data->current_note = (id < 3) ? SCREEN_HOME_1 : SCREEN_HOME_2;
-        app_data->current_page_num = 0;
-        draw_screen(app_data, NULL);
-        break;
-      case GESTURE_SWIPE_UP:
-        if (app_data->current_page_num < 2) {
-          app_data->current_page_num++;
-          draw_screen(app_data, NULL);
-        }
-        break;
-      case GESTURE_SWIPE_DOWN:
-        if (app_data->current_page_num > 0) {
-          app_data->current_page_num--;
-          draw_screen(app_data, NULL);
-        }
-        break;
-    }
-    
-  }
-
-
-  return 0;
-};
-
-// custom function
-void draw_screen(struct app_data_ *app_data, char *msg) {
-  set_bg_color(COLOR_BLACK);
-  fill_screen_bg();
-  set_graph_callback_to_ram_1();
-  load_font();
-  set_fg_color(COLOR_WHITE);
-
-  if (msg != NULL) {
-    text_out_center(msg, 88, 68);
-  } else {
-    render(app_data);
-  }
-
-  repaint_screen_lines(0, 176);
-  set_update_period(0, 0);
-};

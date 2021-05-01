@@ -28,6 +28,7 @@ set /p PROGRAM_NAME=< name.txt
 @SET AS=%EABI%-as
 @SET LD=%EABI%-ld
 @SET OBJCOPY=%EABI%-objcopy
+@SET OBJSTRIP=%EABI%-strip
 @SET GCC=%EABI%-gcc
 @SET NM=%EABI%-nm
 @SET GCC_OPT=%GCC_OPT% -c -Os -Wa,-R -Wall -fpie -pie -fpic -mthumb -mlittle-endian  
@@ -76,6 +77,8 @@ SET LABEL = %PROGRAM_NAME%
 %LD% -Map %PARTNAME%.map -o %PROGRAM_NAME%.elf %FILES_TO_COMPILE% %LD_OPT% %LIB_BIP%
 @if errorlevel 1 goto :error
 ::@call :echoColor 0B "."
+
+::%OBJSTRIP% --strip-all %PROGRAM_NAME%.elf
 
 if exist label.txt (
 %OBJCOPY%  %PROGRAM_NAME%.elf --add-section .elf.label=label.txt

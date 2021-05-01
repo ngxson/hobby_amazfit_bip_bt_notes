@@ -1,7 +1,6 @@
 #include <libbip.h>
-
-#include "notification.h"
 #include "bt_notes.h"
+#include "notification.h"
 #include "utils.h"
 
 noti_list_t *get_notifications() {
@@ -9,6 +8,7 @@ noti_list_t *get_notifications() {
   int addr = 0;
   switch (fw) {
     case NOT_LATIN_1_1_2_05: addr = 0x20009788; break;
+    case LATIN_1_1_5_36: addr = 0x2000103C; break;
   }
   return (noti_list_t *) addr;
 }
@@ -34,9 +34,22 @@ int get_note_id_from_noti(noti_t *noti) {
   }
 }
 
+void save_note(struct app_data_ *app_data, int index, char *title, char *content) {
+  notes_data_t *saved_data = app_data->nand_saved_data.notes_data;
+  m_strcpy(saved_data->notes[index].title, title,   NOTE_TITLE_LEN);
+  m_strcpy(saved_data->notes[index].msg,   content, NOTE_MSG_LEN);
+}
+
+void replace_with_last_noti(struct app_data_ *app_data, int index) {
+  noti_list_t *noti_list = get_notifications();
+  if (noti_list->count > 0) {
+    noti_t *noti = noti_list->notifications[0];
+    save_note(app_data, index, noti->title, noti->msg);
+  }
+}
+
 void scan_notifications(struct app_data_ *app_data) {
   noti_list_t *noti_list = get_notifications();
-  saved_data_t *saved_data = get_saved_data_ptr();
   char *title;
   char *content;
   int i;
@@ -54,8 +67,7 @@ void scan_notifications(struct app_data_ *app_data) {
     title = noti_list->notifications[i]->title + 5;
     if (title[0] == ' ') title++;
     content = noti_list->notifications[i]->msg;
-    m_strcpy(saved_data->notes[index].title, title,   NOTE_TITLE_LEN);
-    m_strcpy(saved_data->notes[index].msg,   content, NOTE_MSG_LEN);
+    save_note(app_data, index, title, content);
     checked[index] = 1;
   }
 }
