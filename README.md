@@ -12,7 +12,8 @@ This app allows you to save notification as note. Notes can be preserved even af
 Watch this video:  
 [![demo](https://img.youtube.com/vi/R5pC8uTLgmk/0.jpg)](https://www.youtube.com/watch?v=R5pC8uTLgmk)
 
-**If you want to send directly using @bip prefix**:
+**If you want to send directly using @bip prefix**:  
+(there is an app to help you, [click here](https://myamazfit.ru/threads/bip-prilozhenija-dlja-bipos-elf.1174/page-111#post-54101))
 1. Send a notification from your phone to the watch
 2. The title must start with @bip1, @bip2,...
 3. Open the app and enjoy
@@ -20,7 +21,7 @@ Watch this video:
 **If you want to save last notification sent to your phone**:
 1. Open the app, open a note slot that you want to write into
 2. Swipe from right to left
-3. Select "Replace by last notification"
+3. Select "Replace with latest notification"
 4. Select "OK"
 
 **To delete a note**:
