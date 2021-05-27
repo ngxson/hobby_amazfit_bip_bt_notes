@@ -626,6 +626,6 @@ extern int 		get_res_count(int index_listed);									// returns the number of a
 extern int 		read_res_by_id (int res_id, int offset, void* buffer, int len); // read the data of the standard resource starting at offset len ​​length by its number res_id
 extern int 		read_elf_res_by_id (int index_listed, int res_id, int offset, void* buffer, int len);		// read resource data (standard and application) starting at offset len ​​length by its number res_id
 extern int		get_fw_version();															// returns the firmware version
+extern int		get_bipos_build();
 
 #endif
-

@@ -14,6 +14,7 @@ noti_list_t *get_notifications() {
 }
 
 int is_supported_fw() {
+  get_bipos_build(); // if the function is not present, the program will just hang here
   return get_notifications() != NULL;
 }
 
@@ -34,17 +35,12 @@ int get_note_id_from_noti(noti_t *noti) {
   }
 }
 
-void save_note(struct app_data_ *app_data, int index, char *title, char *content) {
-  notes_data_t *saved_data = app_data->nand_saved_data.notes_data;
-  m_strcpy(saved_data->notes[index].title, title,   NOTE_TITLE_LEN);
-  m_strcpy(saved_data->notes[index].msg,   content, NOTE_MSG_LEN);
-}
-
 void replace_with_last_noti(struct app_data_ *app_data, int index) {
   noti_list_t *noti_list = get_notifications();
   if (noti_list->count > 0) {
     noti_t *noti = noti_list->notifications[0];
     save_note(app_data, index, noti->title, noti->msg);
+    save_nand_data(app_data, SAVE_ALL_DATA);
   }
 }
 
@@ -52,8 +48,9 @@ void scan_notifications(struct app_data_ *app_data) {
   noti_list_t *noti_list = get_notifications();
   char *title;
   char *content;
-  int i;
   char checked[] = {0, 0, 0, 0, 0, 0, 0, 0};
+  char notes_changed = 0;
+  int i;
   for (i = 0; i < noti_list->count; i++) {
     int index = get_note_id_from_noti(noti_list->notifications[i]);
 
@@ -63,11 +60,44 @@ void scan_notifications(struct app_data_ *app_data) {
     // if this note has been checked, skip
     if (checked[index]) continue;
 
-    // save data to RAM
-    title = noti_list->notifications[i]->title + 5;
+    // mark this notification as "processed"
+    // we change "@bip" to "OK #"
+    title = noti_list->notifications[i]->title;
+    title[0] = 'O';
+    title[1] = 'K';
+    title[2] = ' ';
+    title[3] = '#';
+
+    // save data
+    title = title + 5;
     if (title[0] == ' ') title++;
     content = noti_list->notifications[i]->msg;
     save_note(app_data, index, title, content);
     checked[index] = 1;
+    notes_changed = 1;
+  }
+  
+  if (notes_changed) save_nand_data(app_data, SAVE_ALL_DATA);
+}
+
+void backup_notes(struct app_data_ *app_data) {
+  char noti_title[NOTE_TITLE_LEN + 8];
+  int current_time = get_current_timestamp();
+  int i;
+  for (i = 0; i < NOTE_COUNT; i++) {
+    note *nt = &app_data->nand_saved_data.notes[i];
+    char *title = nt->title;
+    char *content = nt->msg;
+
+    if (title[0] != 0 || content[0] != 0) {
+      _sprintf(noti_title, "@bip%d %s", i + 1, title);
+      add_notification(
+        NOTIFY_TYPE_NONE,
+        current_time + i,
+        noti_title,
+        content,
+        ""
+      );
+    }
   }
 }

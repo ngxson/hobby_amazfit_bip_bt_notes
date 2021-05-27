@@ -8,5 +8,6 @@
 #define RENDER_MAX_LINES_PER_SCREEN 7
 
 void draw_screen(struct app_data_ *app_data, char *msg);
+void draw_clock_only(struct app_data_ *app_data);
 
 #endif

@@ -5,15 +5,16 @@
 @cd %~dp0
 
 :: select the folder name from the script path - this is the name of the elf
-if exist name.txt (
-set /p PROGRAM_NAME=< name.txt
-) else (
-@SET PROGRAM_NAME=%~dp0
-@for /D %%a in ("!PROGRAM_NAME:~0,-1!.txt") do @SET PROGRAM_NAME=%%~na
-)
-	
+:: if exist name.txt (
+:: set /p PROGRAM_NAME=< name.txt
+:: ) else (
+:: @SET PROGRAM_NAME=%~dp0
+:: @for /D %%a in ("!PROGRAM_NAME:~0,-1!.txt") do @SET PROGRAM_NAME=%%~na
+:: )
+@SET PROGRAM_NAME=nui_bt_notes3
+
 :: path to the compiler
-@SET BASE_PATH=C:\Users\XSON\Documents\hobby-amazfit-bip\buildtools
+@SET BASE_PATH=F:\works\hobby-amazfit-bip\buildtools
 @SET LIBRARY_PATH="!BASE_PATH!\arm-none-eabi\lib\thumb\v7e-m+fp\hard"
 @SET LD_OPT=-lm -lc
 @SET GCC_OPT=-mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -fno-math-errno 

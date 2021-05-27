@@ -12,17 +12,21 @@
 #define NOTE_COUNT             6
 #define NOTE_MSG_LEN           256
 #define NOTE_TITLE_LEN         32
-#define NOTE_OFFSET            8
 
 #define SCREEN_EDIT_NOTE      -120
 #define SCREEN_SETTINGS       -100
 #define SCREEN_HOME_1         -10
 #define SCREEN_HOME_2         -11
-#define SCREEN_HELP           -500
+#define SCREEN_HELP_PREFIX    -500
+#define SCREEN_BK_BEGIN       -501
+#define SCREEN_BK_DONE        -502
 
 #define EDIT_ACTION_NONE      0
 #define EDIT_ACTION_REPLACE   1
 #define EDIT_ACTION_DELETE    2
+
+#define TRUE  1
+#define FALSE 0
 
 #define ELF_INDEX_SELF	((int)0xFFFFFFFF)
 
@@ -32,23 +36,28 @@ typedef struct {
 } note;
 
 typedef struct {
-  char sigature[NOTE_OFFSET];
-  note notes[6];
-} notes_data_t;
-
-typedef struct {
-  notes_data_t* notes_data;
+  char signature[8];
   char bright_theme;
   char use_bip_prefix;
+  char _[6]; // reserved bits for future features
+  note notes[6];
 } nand_data_t;
 
 struct app_data_ {
   void*         ret_f;          //  the address of the return function
 	Elf_proc_*    proc;
+
+  // UI states
   int           current_scr;
   int           current_edit_note;
   int           current_edit_action;
   int           current_page_num;
+
+  // for updating clock
+  int           is_update_clock;
+  int           last_clock_minute;
+
+  // copy of data saved in NAND
   nand_data_t   nand_saved_data;
 };
 

@@ -27,7 +27,8 @@ int dispatch_screen(void *param) {
       case GESTURE_CLICK:
         if (ty < 58)       { app_data->current_scr = 0; }
         else if (ty < 116) { app_data->current_scr = 1; }
-        else                              { app_data->current_scr = 2; }
+        else               { app_data->current_scr = 2; }
+        app_data->is_update_clock = FALSE;
         draw_screen(app_data, NULL);
         break;
       case GESTURE_SWIPE_RIGHT:
@@ -49,7 +50,8 @@ int dispatch_screen(void *param) {
       case GESTURE_CLICK:
         if (ty < 58)       { app_data->current_scr = 3; }
         else if (ty < 116) { app_data->current_scr = 4; }
-        else                              { app_data->current_scr = 5; }
+        else               { app_data->current_scr = 5; }
+        app_data->is_update_clock = FALSE;
         draw_screen(app_data, NULL);
         break;
       case GESTURE_SWIPE_RIGHT:
@@ -66,7 +68,8 @@ int dispatch_screen(void *param) {
         break;
       case GESTURE_CLICK:
         if (tx < 118) {
-          if (58 < ty && ty < 116) { app_data->current_scr = SCREEN_HELP; }
+          if (58 < ty && ty < 116) { app_data->current_scr = SCREEN_HELP_PREFIX; }
+          else if (ty >= 116) { app_data->current_scr = SCREEN_BK_BEGIN; }
         } else {
           if (ty < 58)       flip_switch(app_data, SWITCH_BRIGHT_THEME);
           else if (ty < 116) flip_switch(app_data, SWITCH_BIP_PREFIX);
@@ -80,8 +83,22 @@ int dispatch_screen(void *param) {
 
 
 
-  } else if (app_data->current_scr == SCREEN_HELP) {
+  } else if (app_data->current_scr == SCREEN_HELP_PREFIX) {
     if (gest->gesture == GESTURE_CLICK) {
+      app_data->current_scr = SCREEN_SETTINGS;
+      draw_screen(app_data, NULL);
+    }
+
+
+  } else if (app_data->current_scr == SCREEN_BK_BEGIN) {
+    if (gest->gesture == GESTURE_CLICK && ty >= 116) {
+      draw_screen(NULL, "BACKUP\nPlease wait...");
+      backup_notes(app_data);
+      app_data->current_scr = SCREEN_BK_DONE;
+      draw_screen(app_data, NULL);
+    }
+  } else if (app_data->current_scr == SCREEN_BK_DONE) {
+    if (gest->gesture == GESTURE_CLICK || gest->gesture == GESTURE_SWIPE_RIGHT) {
       app_data->current_scr = SCREEN_SETTINGS;
       draw_screen(app_data, NULL);
     }
@@ -108,6 +125,7 @@ int dispatch_screen(void *param) {
           if (ty < 116) { *edit_action = EDIT_ACTION_NONE; }
           else { // DELETE
             save_note(app_data, app_data->current_edit_note, "", "");
+            save_nand_data(app_data, SAVE_ALL_DATA);
             go_back_to_home(app_data, app_data->current_edit_note);
           }
         }

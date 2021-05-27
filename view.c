@@ -5,10 +5,15 @@
 #include "view_utils.h"
 #include "utils.h"
 
-void render(struct app_data_ *app_data);
+int render(struct app_data_ *app_data);
+
+char check_bright_theme(struct app_data_ *app_data) {
+  return app_data->nand_saved_data.bright_theme
+    && app_data->current_scr >= 0;
+}
 
 void draw_screen(struct app_data_ *app_data, char *msg) {
-  char bright_theme = app_data->nand_saved_data.bright_theme && app_data->current_scr >= 0;
+  char bright_theme = check_bright_theme(app_data);
   set_bg_color(bright_theme ? COLOR_WHITE : COLOR_BLACK);
   fill_screen_bg();
   set_graph_callback_to_ram_1();
@@ -24,20 +29,25 @@ void draw_screen(struct app_data_ *app_data, char *msg) {
   if (!bright_theme) render_clock();
 
   repaint_screen_lines(0, 176);
-  set_update_period(0, 0);
 };
 
 void render_home_view(struct app_data_ *app_data) {
   int i, id;
-  notes_data_t *saved_data = app_data->nand_saved_data.notes_data;
   note *n;
   char buf[40];
 
   for (i=0; i<3; i++) {
     id = app_data->current_scr == SCREEN_HOME_1 ? i : (i+3);
-    n = &saved_data->notes[id];
+    n = &app_data->nand_saved_data.notes[id];
     _sprintf(buf, "%d. %s", id + 1, n->title[0] ? n->title : "(empty)");
     text_out(buf, 5, 58 * i + 29 - FONT_HEIGHT_HALF);
+  }
+}
+
+void draw_clock_only(struct app_data_ *app_data) {
+  if (!check_bright_theme(app_data)) {
+    render_clock();
+    repaint_screen_lines(0, 25);
   }
 }
 
@@ -57,10 +67,8 @@ void render_scroll_bar(int page, int total) {
 
 void render_note(struct app_data_ *app_data) {
   int id = app_data->current_scr;
-  notes_data_t *saved_data = app_data->nand_saved_data.notes_data;
-  note *n = &saved_data->notes[id];
+  note *n = &app_data->nand_saved_data.notes[id];
   char msg[NOTE_MSG_LEN];
-  m_strcpy(msg, n->msg, NOTE_MSG_LEN);
 
   text_out_center("Loading...", 88, 88 - FONT_HEIGHT_HALF);
   repaint_screen_lines(0, 176);
@@ -69,6 +77,7 @@ void render_note(struct app_data_ *app_data) {
   // render content
   text_out(n->title, 5, 5);
   draw_horizontal_line(5 + 20, 0, 176);
+  m_strcpy(msg, n->msg, NOTE_MSG_LEN);
   text_out_with_word_wraps(msg, 5 + 20 + 5, app_data->current_page_num);
   render_scroll_bar(app_data->current_page_num, 3);
 }
@@ -77,15 +86,15 @@ void render_settings(struct app_data_ *app_data) {
   text_out("White", 5, 29 - FONT_HEIGHT);
   text_out("background", 5, 29 + 2);
   render_switch(16, app_data->nand_saved_data.bright_theme);
+
   text_out("Scan @bip", 5, 58 + 29 - FONT_HEIGHT);
   text_out("prefix [?]", 5, 58 + 29 + 2);
   render_switch(74, app_data->nand_saved_data.use_bip_prefix);
 
-  text_out("BT Notes V2.0", 5, 176 - 36);
-  char buf[256];
-  int notes_data_ptr = (int) app_data->nand_saved_data.notes_data;
-  _sprintf(buf, "debug:0x%08x", notes_data_ptr);
-  text_out(buf, 5, 176 - 18);
+  text_out("Backup", 5, 58*2 + 29 - FONT_HEIGHT_HALF);
+  set_fg_color(COLOR_GREEN);
+  text_out("V3.0", 176 - 40, 58*2 + 29 - FONT_HEIGHT_HALF);
+  set_fg_color(COLOR_WHITE);
 }
 
 void render_edit_note(struct app_data_ *app_data) {
@@ -115,12 +124,29 @@ void render_edit_note(struct app_data_ *app_data) {
   }
 }
 
-void render(struct app_data_ *app_data) {
+void render_backup(int current_scr) {
+  if (current_scr == SCREEN_BK_BEGIN) {
+    char buf[256];
+    m_strcpy(buf, "This saves notes back to notifications. After updating resource, notes are preserved.", 256);
+    text_out_with_word_wraps(buf, 20, 0);
+
+    text_out("START", 6+7+6, 58*2 + 29 - FONT_HEIGHT_HALF);
+    render_menu_arrow(6, 58*2 + 29-7);
+  } else {
+    text_out_center("FINISHED!\nYou can now exit", 88, 68);
+  }
+}
+
+int render(struct app_data_ *app_data) {
   if (app_data->current_scr == SCREEN_SETTINGS) {
     render_settings(app_data);
     render_scroll_bar(2, 3);
-  } else if (app_data->current_scr == SCREEN_HELP) {
+  } else if (app_data->current_scr == SCREEN_HELP_PREFIX) {
     render_help();
+  } else if (app_data->current_scr == SCREEN_BK_BEGIN) {
+    render_backup(SCREEN_BK_BEGIN);
+  } else if (app_data->current_scr == SCREEN_BK_DONE) {
+    render_backup(SCREEN_BK_DONE);
   } else if (
     app_data->current_scr == SCREEN_HOME_1 ||
     app_data->current_scr == SCREEN_HOME_2
@@ -132,4 +158,5 @@ void render(struct app_data_ *app_data) {
   } else if (app_data->current_scr >= 0) {
     render_note(app_data);
   }
+  return 0;
 }

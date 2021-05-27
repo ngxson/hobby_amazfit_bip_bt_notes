@@ -19,34 +19,32 @@ int m_strcmp(const char *s1, const char *s2) {
 	return (*(unsigned char *)s1 - *(unsigned char *)--s2);
 }
 
-void save_nand_data(struct app_data_ *app_data) {
+void save_nand_data(struct app_data_ *app_data, int mode) {
   nand_data_t *nand_saved_data = &app_data->nand_saved_data;
-  ElfWriteSettings(ELF_INDEX_SELF, nand_saved_data, 0, sizeof(nand_data_t));
+  ElfWriteSettings(
+    ELF_INDEX_SELF,
+    nand_saved_data,
+    0,
+    mode == SAVE_ALL_DATA ? sizeof(nand_data_t) : 16
+  );
 }
 
-char SIGNATURE[] = "BTN0TE";
-char NOTE_DEMO_TITLE[] = "Welcome!";
-char NOTE_DEMO_CONTENT[] = "This is your first note. You can modify this note by sending a notification from your phone. The title must start with @bip1. Use prefix @bip2 for editing 2nd note.";
+void save_note(struct app_data_ *app_data, int index, char *title, char *content) {
+  nand_data_t *nand_saved_data = &app_data->nand_saved_data;
+  m_strcpy(nand_saved_data->notes[index].title, title,   NOTE_TITLE_LEN);
+  m_strcpy(nand_saved_data->notes[index].msg,   content, NOTE_MSG_LEN);
+}
+
+char SIGNATURE[] = "BTN0v3";
 
 void get_nand_data(struct app_data_ *app_data) {
-  notes_data_t *notes_data;
   nand_data_t *nand_saved_data = &app_data->nand_saved_data;
-  ElfReadSettings(ELF_INDEX_SELF, nand_saved_data, 0, sizeof(nand_data_t));
-  notes_data = nand_saved_data->notes_data;
-
-  // check for signature
-  if (notes_data == NULL || m_strcmp(notes_data->sigature, SIGNATURE) != 0) {
-    // allocate memory and set default data
-    notes_data = (notes_data_t *) _pvPortMalloc(sizeof(notes_data_t));
-    _memclr(notes_data, sizeof(notes_data_t));
-    m_strcpy(notes_data->sigature, SIGNATURE, 8);
-    m_strcpy(notes_data->notes[0].title, NOTE_DEMO_TITLE, NOTE_TITLE_LEN);
-    m_strcpy(notes_data->notes[0].msg, NOTE_DEMO_CONTENT, NOTE_MSG_LEN);
-    nand_saved_data->notes_data = notes_data;
-    nand_saved_data->bright_theme = 0;
-    nand_saved_data->use_bip_prefix = 1;
-    save_nand_data(app_data);
-  }
+  ElfReadSettings(
+    ELF_INDEX_SELF,
+    nand_saved_data,
+    0,
+    sizeof(nand_data_t)
+  );
 }
 
 void flip_switch(struct app_data_ *app_data, int sw) {
@@ -54,11 +52,11 @@ void flip_switch(struct app_data_ *app_data, int sw) {
   switch (sw) {
     case SWITCH_BRIGHT_THEME:
       nand_saved_data->bright_theme = !nand_saved_data->bright_theme;
-      save_nand_data(app_data);
+      save_nand_data(app_data, SAVE_ONLY_SETTINGS);
       break;
     case SWITCH_BIP_PREFIX:
       nand_saved_data->use_bip_prefix = !nand_saved_data->use_bip_prefix;
-      save_nand_data(app_data);
+      save_nand_data(app_data, SAVE_ONLY_SETTINGS);
       break;
   }
 }

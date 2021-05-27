@@ -50,6 +50,7 @@ void show_screen(void *proc) {
       app_data->ret_f = show_watchface;
     app_data->current_scr = SCREEN_HOME_1;
     app_data->current_page_num = 0;
+    app_data->is_update_clock = FALSE;
   }
 
   set_display_state_value(8, 1);
@@ -60,10 +61,9 @@ void show_screen(void *proc) {
     if (app_data->nand_saved_data.use_bip_prefix) {
       draw_screen(NULL, "Scanning\nnotifications...");
       scan_notifications(app_data);
-      set_update_period(1, 100);
-    } else {
-      draw_screen(app_data, NULL);
     }
+    draw_screen(app_data, NULL);
+    set_update_period(1, 5000);
   } else {
     draw_screen(NULL, "FW version\nnot supported!");
   }
@@ -78,7 +78,18 @@ void key_press_screen() {
 void screen_job() {
   struct app_data_ **app_data_p = get_ptr_temp_buf_2();
   struct app_data_ *app_data = *app_data_p;
-  draw_screen(app_data, NULL);
+
+  struct datetime_ datetime;
+  get_current_date_time(&datetime);
+  int last_clock_minute = app_data->last_clock_minute;
+  int curr_clock_minute = datetime.min;
+
+  if (last_clock_minute != curr_clock_minute) {
+    draw_clock_only(app_data);
+    app_data->last_clock_minute = last_clock_minute;
+  }
+
+  set_update_period(1, 5000);
 }
 
 
