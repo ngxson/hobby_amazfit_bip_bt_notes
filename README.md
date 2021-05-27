@@ -1,6 +1,6 @@
 # hobby_amazfit_bip_bt_notes
 
-**ATTENTION: This app support these FW versions: NOT_LATIN 1.1.2.05 and LATIN 1.1.5.36**
+**ATTENTION: This app support these FW versions: NOT_LATIN 1.1.2.05 and LATIN 1.1.5.36**  
 This app also requires **BipOS 0.5.5 build 5** (which has the function `get_bipos_build`) to run.  
 Link to the patch: https://myamazfit.ru/threads/bip-mnvolkov-bipos.1010/page-142#post-54347
 
